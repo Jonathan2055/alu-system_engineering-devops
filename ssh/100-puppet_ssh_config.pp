@@ -1,26 +1,20 @@
-.fest to configure SSH client
+# Puppet manifest to configure global SSH client settings:
+# Sets IdentityFile to ~/.ssh/school and disables password authentication in /etc/ssh/ssh_config
 
-file { '/root/.ssh/config':
-  ensure  => file,
-  mode    => '0600',
-  owner   => 'root',
-  group   => 'root',
-}
-
-file_line { 'Declare identity file':
-  path  => '/root/.ssh/config',
-  line  => '    IdentityFile ~/.ssh/school',
-  match => '^\\s*IdentityFile',
-}
-
-file_line { 'Turn off passwd auth':
-  path  => '/root/.ssh/config',
-  line  => '    PasswordAuthentication no',
-  match => '^\\s*PasswordAuthentication',
-}
-
-file_line { 'Set host wildcard':
-  path  => '/root/.ssh/config',
+file_line { 'Set Host wildcard':
+  path  => '/etc/ssh/ssh_config',
   line  => 'Host *',
   match => '^Host \*',
-}.
+}
+
+file_line { 'Set IdentityFile':
+  path  => '/etc/ssh/ssh_config',
+  line  => '    IdentityFile ~/.ssh/school',
+  match => '^\s*IdentityFile',
+}
+
+file_line { 'Disable PasswordAuthentication':
+  path  => '/etc/ssh/ssh_config',
+  line  => '    PasswordAuthentication no',
+  match => '^\s*PasswordAuthentication',
+}
