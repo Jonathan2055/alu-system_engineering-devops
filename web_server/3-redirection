@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Script to install nginx and configure a 301 redirect
+
+# Update packages
+apt-get update -y
+
+# Install nginx
+apt-get install nginx -y
+
+# Add custom homepage just to test the server works
+echo "Holberton School for the win!" > /var/www/html/index.html
+
+# Insert redirect config into the server block of nginx default config
+sed -i '/^\s*location \/ {/i \
+    location /redirect_me {\n\
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\
+    }\n' /etc/nginx/sites-available/default
+
+# Restart nginx to apply changes
+service nginx restart
