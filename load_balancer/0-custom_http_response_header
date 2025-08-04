@@ -1,0 +1,22 @@
+onfigures a new Ubuntu server with Nginx and sets a custom HTTP header
+
+# Ignore shellcheck SC2154
+# shellcheck disable=SC2154
+
+# Update and install Nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Get the hostname
+HOSTNAME=$(hostname)
+
+# Add custom header to Nginx default config
+CONFIG_FILE="/etc/nginx/sites-available/default"
+if grep -q "add_header X-Served-By" "$CONFIG_FILE"; then
+    echo "Custom header already set."
+else
+    sed -i "/^\s*location \/ {/a\\\tadd_header X-Served-By \"$HOSTNAME\";" "$CONFIG_FILE"
+fi
+
+# Restart Nginx to apply changes
+systemctl restart nginx
